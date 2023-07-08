@@ -7,6 +7,11 @@ import java.util.function.Consumer;
 
 public class ConsumerExample {
 
+    static Consumer<Student> studentActivities = (student) -> System.out.println(student.getActivities());
+   static  Consumer<Student> studentNames=(student)-> System.out.println(student.getName());
+
+    static  Consumer<Student> studentGrade=(student)-> System.out.println(student.getGradeLevel());
+
 
     public static void printStudentDetails() {
         List<Student> studentList = StudentDataBase.getAllStudents();
@@ -20,22 +25,36 @@ public class ConsumerExample {
     public static void printStudentNameAndActivities()
     {
         List<Student> studentNameList= StudentDataBase.getAllStudents();
-        Consumer<Student> studentActivities = (student) -> System.out.println(student.getActivities());
-        Consumer<Student> studentNames=(student)-> System.out.println(student.getName());
+
         studentNameList.forEach(studentActivities.andThen(studentNames) );
 
     }
 
+    public static void printOnCondition()
+    {
+List<Student> studentList = StudentDataBase.getAllStudents();
+studentList.forEach((student -> {
+    if(student.getGradeLevel()>=3 && student.getGpa()>=3.9)
+    {
+        studentActivities.andThen(studentNames).andThen(studentGrade).accept(student);
+    }
+}));
+    }
+
     public static void main(String args[]) {
+        StudentConsumer c1 = new StudentConsumer();
 
         Consumer<String> consume = (s) -> {
             System.out.println(s.toUpperCase());
         };
 
         consume.accept("Consumer in java 8");
-        System.out.println("Consumer " + consume);
+      System.out.println("Consumer " + consume);
 
-        printStudentDetails();
-        printStudentNameAndActivities();
+       printStudentDetails();
+       printStudentNameAndActivities();
+        printOnCondition();
+        c1.biConsumerCall();
+
     }
 }
